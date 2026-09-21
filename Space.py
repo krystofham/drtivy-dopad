@@ -34,7 +34,10 @@ class Space:
         # Fill in this method.
         # Returs as much values as possible which are constant during the simulation and may help
         # us to decide if the algorithm is correct
-
-        return [42, 69]
+        SunMass = 1.99E30
+        EarthMass = 5.94E24
+        GConst = 6.67E-11
+        EarthRadius = 6378000
+        return [SunMass, EarthMass, GConst, EarthRadius]
 
 
