@@ -16,7 +16,7 @@ class RK4Stepper:
 		problem.getDerivatives(t_0 + t_step/2, state + t_step * self.k2/2,  self.k3)
 		problem.getDerivatives(t_0 + t_step, state + t_step * self.k3,  self.k4)
 		state_new = state + 1/6*t_step*(self.k1 + 2* self.k2 + 2*self.k3 + self.k4)
-		print(state_new, "\n")
+		# print(state_new, "\n")
 		# earthPosNew = earthPos + 1/6*(t_step)*(self.k1+2*self.k2+2*self.k3+self.k4)
 
 

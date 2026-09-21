@@ -1,4 +1,5 @@
 import time
+import numpy as np
 class ODESolver:
     problem = None
     stepper = None
@@ -25,8 +26,10 @@ class ODESolver:
         self.conservedValues = self.problem.getConservedValues(t_0, state)
 
         iteration = 0
+        dire = False
+        dire_last = False
+        dire_small = float("inf")
         while (t < t_max):
-            #time.sleep(0.5)
             iteration += 1
             state_new = self.stepper.nextStep(t_0, t_step, state, self.problem)
             halt = self.problem.shouldHalt(t, t + t_step, state, state_new)
@@ -38,12 +41,19 @@ class ODESolver:
                 output(t + t_step, state, iteration)
 
             if (halt):
-                return True
-
+                return True, 0
+            if dire:
+                dire_last = dire
+            dire = np.linalg.norm(state_new.AsteroidPosition - state_new.EarthPosition)/6378000
+            #print(dire)
+            if dire < dire_small:
+                dire_small = dire
+            if dire_last and dire_last < dire and dire > 100000:
+                return False, dire_small
             t += t_step
             state = state_new
 
-        return False
+        return False, dire_small
 
     def checkConservedValues(self, t_new, state_new):
         conservedValues = self.problem.getConservedValues(t_new, state_new)
@@ -56,6 +66,6 @@ class ODESolver:
                 ratio = 1 / ratio
             if (ratio - 1 > self.conservedValueRelativeTreshold):
                 success = False
-                print("Conserved value {0} is too far from expected. current = {1}, expected = {2}".format(index, value, self.conservedValues[index]))
+                #print("Conserved value {0} is too far from expected. current = {1}, expected = {2}".format(index, value, self.conservedValues[index]))
 
         return success

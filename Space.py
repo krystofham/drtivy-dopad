@@ -13,15 +13,21 @@ class Space:
         # Set dState with time derivatives of state .
 
         dState.EarthPosition = state.EarthVelocity
-        dState.EarthVelocity = self.GConst * self.SunMass*state.EarthPosition / (np.sqrt(state.EarthPosition[0]**2+state.EarthPosition[1]**2+state.EarthPosition[2]**2)**3)
-        print(self.GConst * self.SunMass / (state.EarthPosition**2))
+        dState.EarthVelocity = -self.GConst * self.SunMass*state.EarthPosition / (np.linalg.norm(state.EarthPosition)**3)
+        #print(self.GConst * self.SunMass / (state.EarthPosition**2))
         dState.AsteroidPosition = state.AsteroidVelocity
-        dState.AsteroidVelocity = (self.GConst * self.SunMass* state.AsteroidPosition / (np.linalg.norm(state.AsteroidPosition)**3)) + (self.GConst * self.SunMass * (state.AsteroidPosition - state.EarthPosition)/ np.linalg.norm((state.AsteroidPosition - state.EarthPosition))**3)
+        dState.AsteroidVelocity = -(self.GConst * self.SunMass* state.AsteroidPosition / np.linalg.norm(state.AsteroidPosition)**3) 
+        - (self.GConst * self.EarthMass * (state.AsteroidPosition - state.EarthPosition)/ np.linalg.norm(state.AsteroidPosition - state.EarthPosition)**3)
         
     # Decides whether the simulation should terminate
     def shouldHalt(self, t_old, t_new, state_old, state_new):
 
         # Fill in this method.
+        e_old = state_old.EarthPosition
+        e_new = state_new.EarthPosition
+        a_new = state_new.AsteroidPosition
+        if np.linalg.norm((a_new - e_new) - np.dot((a_new - e_new), ((e_new - e_old))/ np.linalg.norm(e_new - e_old))) < self.EarthRadius:
+            return True
         # Decide whether the collision of the asteroid with Earth occured.
         if (np.linalg.norm(state_old.AsteroidPosition - state_old.EarthPosition)) < self.EarthRadius:
             return True
@@ -39,5 +45,3 @@ class Space:
         GConst = 6.67E-11
         EarthRadius = 6378000
         return [SunMass, EarthMass, GConst, EarthRadius]
-
-
