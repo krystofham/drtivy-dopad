@@ -22,3 +22,8 @@ def printer(time, state, iteration):
 solver.registerOutput(printer)
 
 hit = solver.integrate(0, 365*24*60*60, 5*60, 10E-6, getStartingState(1000))
+
+def gravitacni_zrychleni(m2, p1, p2):
+    zrychleni = GConst * m2/(p1 - p2)**2
+
+    return zrychleni

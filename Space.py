@@ -1,6 +1,5 @@
 import numpy as np
 from SystemState import SystemState
-
 class Space:
     SunMass = 1.99E30
     EarthMass = 5.94E24
@@ -10,21 +9,20 @@ class Space:
     # There are 4 variables, each of three coordinates. This function computes
     # d/dt for each variable
     def getDerivatives(self, time, state, dState):
-
         # Fill in this method.
         # Set dState with time derivatives of state .
 
-        dState.EarthPostion = state.EarthPostion
-        dState.EarthVelocity = state.EarthVelocity
-        dState.AsteroidPostion = state.AsteroidPostion
-        dState.AsteroidVelocity = state.AsteroidVelocity
-
+        dState.EarthPostion = state.EarthVelocity
+        dState.EarthVelocity = self.GConst * self.SunMass / (state.EarthPosition)**2
+        dState.AsteroidPostion = state.AsteroidVelocity
+        dState.AsteroidVelocity = (self.GConst * self.SunMass / (state.AsteroidPosition)**2) + (self.GConst * self.SunMass / (state.AsteroidPosition - state.EarthPosition)**2)
     # Decides whether the simulation should terminate
     def shouldHalt(self, t_old, t_new, state_old, state_new):
 
         # Fill in this method.
         # Decide whether the collision of the asteroid with Earth occured.
-
+        if (np.linalg.norm(state_old.AsteroidPosition - state_old.EarthPosition)) < self.EarthRadius:
+            return True
         return False
 
     # This function returns a list of values which sould be constant during the simulation.
@@ -36,3 +34,5 @@ class Space:
         # us to decide if the algorithm is correct
 
         return [42, 69]
+
+
