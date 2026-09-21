@@ -12,10 +12,12 @@ class Space:
         # Fill in this method.
         # Set dState with time derivatives of state .
 
-        dState.EarthPostion = state.EarthVelocity
-        dState.EarthVelocity = self.GConst * self.SunMass / (state.EarthPosition)**2
-        dState.AsteroidPostion = state.AsteroidVelocity
-        dState.AsteroidVelocity = (self.GConst * self.SunMass / (state.AsteroidPosition)**2) + (self.GConst * self.SunMass / (state.AsteroidPosition - state.EarthPosition)**2)
+        dState.EarthPosition = state.EarthVelocity
+        dState.EarthVelocity = self.GConst * self.SunMass*state.EarthPosition / (np.sqrt(state.EarthPosition[0]**2+state.EarthPosition[1]**2+state.EarthPosition[2]**2)**3)
+        print(self.GConst * self.SunMass / (state.EarthPosition**2))
+        dState.AsteroidPosition = state.AsteroidVelocity
+        dState.AsteroidVelocity = (self.GConst * self.SunMass* state.AsteroidPosition / (np.linalg.norm(state.AsteroidPosition)**3)) + (self.GConst * self.SunMass * (state.AsteroidPosition - state.EarthPosition)/ np.linalg.norm((state.AsteroidPosition - state.EarthPosition))**3)
+        
     # Decides whether the simulation should terminate
     def shouldHalt(self, t_old, t_new, state_old, state_new):
 

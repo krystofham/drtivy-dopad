@@ -1,3 +1,4 @@
+import time
 class ODESolver:
     problem = None
     stepper = None
@@ -25,6 +26,7 @@ class ODESolver:
 
         iteration = 0
         while (t < t_max):
+            #time.sleep(0.5)
             iteration += 1
             state_new = self.stepper.nextStep(t_0, t_step, state, self.problem)
             halt = self.problem.shouldHalt(t, t + t_step, state, state_new)
