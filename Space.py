@@ -14,9 +14,9 @@ class Space:
         # Fill in this method.
         # Set dState with time derivatives of state .
 
-        dState.EarthPostion = state.EarthPostion
+        dState.EarthPosition = state.EarthPosition
         dState.EarthVelocity = state.EarthVelocity
-        dState.AsteroidPostion = state.AsteroidPostion
+        dState.AsteroidPosition = state.AsteroidPosition
         dState.AsteroidVelocity = state.AsteroidVelocity
 
     # Decides whether the simulation should terminate
